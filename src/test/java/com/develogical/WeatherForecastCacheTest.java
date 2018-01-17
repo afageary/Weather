@@ -49,4 +49,21 @@ public class WeatherForecastCacheTest {
         verify(delegate, times(1)).getTemperature("here", "today");
     }
 
+    @Test
+    public void canRetrieveDifferentValues() {
+        WeatherForecastInterface delegate = mock(WeatherForecastInterface.class);
+
+        when(delegate.getTemperature("here", "today")).thenReturn(1);
+        when(delegate.getTemperature("somewhere", "tomorrow")).thenReturn(999);
+
+        WeatherForecastCache weatherForecastCache = new WeatherForecastCache(delegate);
+
+        weatherForecastCache.getTemperature("here", "today");
+
+        int actualTemperature = weatherForecastCache.getTemperature("somewhere", "tomorrow");
+
+        assertThat(actualTemperature, equalTo(999));
+        verify(delegate, times(1)).getTemperature("here", "today");
+        verify(delegate, times(1)).getTemperature("somewhere", "tomorrow");
+    }
 }

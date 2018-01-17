@@ -7,7 +7,15 @@ import com.weather.Region;
 
 public class WeatherForecastAdaptor implements WeatherForecastInterface {
 
+    public WeatherForecastAdaptor(WeatherForecastInterface service){
+
+    }
+
     public String getOutlook (String location, String day) {
+
+        Region region  = null;
+        if (location.equals("London"))
+            region = Region.LONDON;
 
         return null;
     }
