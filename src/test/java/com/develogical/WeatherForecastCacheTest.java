@@ -66,4 +66,24 @@ public class WeatherForecastCacheTest {
         verify(delegate, times(1)).getTemperature("here", "today");
         verify(delegate, times(1)).getTemperature("somewhere", "tomorrow");
     }
+
+    @Test
+    public void cacheSizeIsLimitedToSpecificValue() {
+        WeatherForecastInterface delegate = mock(WeatherForecastInterface.class);
+
+        when(delegate.getTemperature("here", "today")).thenReturn(1);
+        when(delegate.getTemperature("somewhere", "tomorrow")).thenReturn(999);
+        when(delegate.getTemperature("Khartoum", "tomorrow")).thenReturn(40);
+        when(delegate.getTemperature("Oxford", "tomorrow")).thenReturn(2);
+        WeatherForecastCache weatherForecastCache = new WeatherForecastCache(delegate);
+
+        weatherForecastCache.getTemperature("here", "today");
+        weatherForecastCache.getTemperature("Khartoum", "tomorrow");
+        weatherForecastCache.getTemperature("Oxford", "tomorrow");
+        verify(delegate, times(1)).getTemperature("here", "today");
+        int actualTemperature = weatherForecastCache.getTemperature("here", "today");
+        verify(delegate, times(2)).getTemperature("here", "today");
+        assertThat(actualTemperature, equalTo(1));
+
+    }
 }

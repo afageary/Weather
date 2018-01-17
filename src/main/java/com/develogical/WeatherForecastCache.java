@@ -7,6 +7,7 @@ public class WeatherForecastCache implements WeatherForecastInterface {
 
     Map<Collection, Integer> TemperatureCache = new HashMap<>();
     Map<Collection, String> outlookCache = new HashMap<>();
+    List<Collection> keys = new ArrayList<>();
 
     public WeatherForecastCache(WeatherForecastInterface delegate) {
         this.delegate = delegate;
@@ -17,6 +18,8 @@ public class WeatherForecastCache implements WeatherForecastInterface {
         key.add(region);
         key.add(day);
 
+        removeOldest(key);
+
         if (outlookCache.containsKey(key)) {
             return outlookCache.get(key);
         }
@@ -26,11 +29,12 @@ public class WeatherForecastCache implements WeatherForecastInterface {
         return outlook;
     }
 
-
     public int getTemperature(String region, String day) {
         Collection key = new ArrayList();
         key.add(region);
         key.add(day);
+
+        removeOldest(key);
 
         if (TemperatureCache.containsKey(key)) {
             return TemperatureCache.get(key);
@@ -39,5 +43,15 @@ public class WeatherForecastCache implements WeatherForecastInterface {
         TemperatureCache.put(key, temperature);
 
         return temperature;
+    }
+
+    private void removeOldest(Collection key) {
+        if (keys.size() < 3) {
+            keys.add(key);
+        } else {
+            outlookCache.remove(keys.get(0));
+            TemperatureCache.remove(keys.get(0));
+            keys.remove(0);
+        }
     }
 }

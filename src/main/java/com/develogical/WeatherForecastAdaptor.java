@@ -6,23 +6,18 @@ import com.weather.Forecaster;
 import com.weather.Region;
 
 public class WeatherForecastAdaptor implements WeatherForecastInterface {
-
-    public WeatherForecastAdaptor(WeatherForecastInterface service){
-
+    public String getOutlook(String location, String day) {
+        Forecaster forecaster = new Forecaster();
+        // do some translation
+        Forecast londonForecast = forecaster.forecastFor(Region.BIRMINGHAM, Day.FRIDAY);
+        return londonForecast.summary();
     }
 
-    public String getOutlook (String location, String day) {
-
-        Region region  = null;
-        if (location.equals("London"))
-            region = Region.LONDON;
-
-        return null;
-    }
-
-    public int getTemperature (String location, String day) {
-
-        return 0;
+    public int getTemperature(String location, String day) {
+        Forecaster forecaster = new Forecaster();
+        // do some translation
+        Forecast londonForecast = forecaster.forecastFor(Region.BIRMINGHAM, Day.FRIDAY);
+        return londonForecast.temperature();
     }
 
 }
